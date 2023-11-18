@@ -29,7 +29,7 @@ public class Star extends BaseTimeEntity{
     @JoinColumn(name = "account_id")
     private Account account;
 
-    private Integer group;
+    private Integer group_id;
 
     private String title;
 
