@@ -27,6 +27,7 @@ public enum ResponseCode {
     STAR_CREATE_SUCCESS(CREATED, "스타 생성 성공"),
 
     /* 403 FORBIDDEN : 권한이 없는 사용자 */
+    STAR_READ_FAIL_NOT_OWNER(FORBIDDEN, "본인 스타만 조회할 수 있습니다"),
     STAR_UPDATE_FAIL_NOT_OWNER(FORBIDDEN, "본인 스타만 수정할 수 있습니다"),
     STAR_DELETE_FAIL_NOT_OWNER(FORBIDDEN, "본인 스타만 삭제할 수 있습니다"),
 

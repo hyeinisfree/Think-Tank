@@ -9,7 +9,12 @@ import com.ttteam.thinktank.exception.ResourceNotFoundException;
 import com.ttteam.thinktank.repository.AccountRepository;
 import com.ttteam.thinktank.repository.StarRepository;
 import com.ttteam.thinktank.util.ResponseCode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,10 +47,41 @@ public class StarService {
         return StarResponseDto.of(star);
     }
 
-    public StarResponseDto readStar(Long starId) {
+    public StarResponseDto readStar(String uuid, Long starId) {
+        Account account = accountRepository.findByUuid(uuid)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
+
         Star star = starRepository.findById(starId)
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
+
+        if (!account.equals(star.getAccount())) {
+            throw new ForbiddenException(ResponseCode.STAR_READ_FAIL_NOT_OWNER);
+        }
+
         return StarResponseDto.of(star);
+    }
+
+    public List<StarResponseDto> readMyStarsMonthly(String uuid, String range) {
+        Account account = accountRepository.findByUuid(uuid)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        LocalDateTime month = LocalDateTime.parse(range, formatter);
+        YearMonth targetYearMonth = YearMonth.from(month);
+        LocalDate firstDate = targetYearMonth.atDay(1);
+        LocalDate lastDate = targetYearMonth.atEndOfMonth();
+
+        List<StarResponseDto> data = starRepository.findAllByAccountAndCreatedAtBetween(account,
+                firstDate, lastDate).stream().map(s -> StarResponseDto.of(s))
+            .collect(Collectors.toList());
+
+        if(!data.isEmpty()){
+            if(!data.getFirst().getAccountId().equals(account.getId())){
+                throw new ForbiddenException(ResponseCode.STAR_READ_FAIL_NOT_OWNER);
+            }
+        }
+
+        return data;
     }
 
     public void updateStar(String uuid, Long starId, StarRequestDto request) {
@@ -55,7 +91,7 @@ public class StarService {
         Star star = starRepository.findById(starId)
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
 
-        if(!account.equals(star.getAccount())){
+        if (!account.equals(star.getAccount())) {
             throw new ForbiddenException(ResponseCode.STAR_UPDATE_FAIL_NOT_OWNER);
         }
 
@@ -69,7 +105,7 @@ public class StarService {
         Star star = starRepository.findById(starId)
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
 
-        if(!account.equals(star.getAccount())){
+        if (!account.equals(star.getAccount())) {
             throw new ForbiddenException(ResponseCode.STAR_DELETE_FAIL_NOT_OWNER);
         }
 
