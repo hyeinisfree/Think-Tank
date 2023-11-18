@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.FetchProfiles;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;

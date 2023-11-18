@@ -71,16 +71,8 @@ public class StarService {
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        logger.info("#####################");
-        logger.info(range.toString());
-//        LocalDate month = LocalDate.parse(range, formatter);
-//        YearMonth targetYearMonth = YearMonth.from(month);
-//        LocalDate firstDate = targetYearMonth.atDay(1);
-//        LocalDate lastDate = targetYearMonth.atEndOfMonth();
         LocalDateTime firstDate = range.atDay(1).atStartOfDay();
         LocalDateTime lastDate = range.atEndOfMonth().atTime(23,59,59);
-        logger.info(firstDate + ")))" + lastDate);
-
 
         List<StarResponseDto> data = starRepository.findAllByAccountAndCreatedAtBetween(account,
                 firstDate, lastDate).stream().map(s -> StarResponseDto.of(s))
