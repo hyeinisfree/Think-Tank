@@ -22,8 +22,8 @@ public class Account extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, name = "naver_id")
-    private String naverId;
+    @Column(unique = true)
+    private String uuid;
 
     private String name;
 
