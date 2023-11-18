@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.OK;
 
 @Getter
@@ -31,7 +32,10 @@ public enum ResponseCode {
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     ACCOUNT_NOT_FOUND(NOT_FOUND, "계정 정보를 찾을 수 없습니다"),
-    STAR_NOT_FOUND(NOT_FOUND, "스타 정보를 찾을 수 없습니다")
+    STAR_NOT_FOUND(NOT_FOUND, "스타 정보를 찾을 수 없습니다"),
+
+    /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
+    EMAIL_DUPLICATION(CONFLICT, "이미 사용 중인 이메일입니다")
     ;
 
     private final HttpStatus httpStatus;

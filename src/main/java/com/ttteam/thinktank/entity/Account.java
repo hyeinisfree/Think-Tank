@@ -25,6 +25,9 @@ public class Account extends BaseTimeEntity {
     @Column(unique = true)
     private String uuid;
 
+    @Column(unique = true, name = "naver_id")
+    private String naverId;
+
     private String name;
 
     private String email;

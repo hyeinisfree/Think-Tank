@@ -21,4 +21,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         logger.info("{} ({}) :: {}", e.getResponseCode(), e.getResponseCode().getHttpStatus().toString(), e.getResponseCode().getDetail());
         return ResponseData.toResponseEntity(e.getResponseCode());
     }
+
+    @ExceptionHandler(DuplicateException.class)
+    protected ResponseEntity<ResponseData> handleDuplicateException(DuplicateException e) {
+        logger.info("{} ({}) :: {}", e.getResponseCode(), e.getResponseCode().getHttpStatus().toString(), e.getResponseCode().getDetail());
+        return ResponseData.toResponseEntity(e.getResponseCode());
+    }
 }
