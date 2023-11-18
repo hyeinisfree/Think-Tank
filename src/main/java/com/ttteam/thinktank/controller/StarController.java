@@ -7,6 +7,7 @@ import com.ttteam.thinktank.util.ResponseCode;
 import com.ttteam.thinktank.util.ResponseData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.FetchProfiles;
@@ -55,9 +56,9 @@ public class StarController {
 
     @GetMapping("")
     public ResponseEntity<ResponseData<List<StarResponseDto>>> readMyStarsMonthly(
-        @RequestParam @NotNull String uuid, @RequestParam @NotNull String range) {
+        @RequestParam @NotNull String uuid, @RequestParam @NotNull YearMonth range) {
         List<StarResponseDto> data = starService.readMyStarsMonthly(uuid, range);
-        return ResponseData.toResponseEntity(ResponseCode.STAR_READ_SUCCESS, data);
+        return ResponseData.toResponseEntity(ResponseCode.STAR_MONTHLY_READ_SUCCESS, data);
     }
 
     @DeleteMapping("{starId}")

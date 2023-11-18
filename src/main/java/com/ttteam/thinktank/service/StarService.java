@@ -5,6 +5,7 @@ import com.ttteam.thinktank.controller.dto.StarResponseDto;
 import com.ttteam.thinktank.entity.Account;
 import com.ttteam.thinktank.entity.Star;
 import com.ttteam.thinktank.exception.ForbiddenException;
+import com.ttteam.thinktank.exception.GlobalExceptionHandler;
 import com.ttteam.thinktank.exception.ResourceNotFoundException;
 import com.ttteam.thinktank.repository.AccountRepository;
 import com.ttteam.thinktank.repository.StarRepository;
@@ -17,12 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class StarService {
+
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private final AccountRepository accountRepository;
     private final StarRepository starRepository;
@@ -61,15 +66,21 @@ public class StarService {
         return StarResponseDto.of(star);
     }
 
-    public List<StarResponseDto> readMyStarsMonthly(String uuid, String range) {
+    public List<StarResponseDto> readMyStarsMonthly(String uuid, YearMonth range) {
         Account account = accountRepository.findByUuid(uuid)
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        LocalDateTime month = LocalDateTime.parse(range, formatter);
-        YearMonth targetYearMonth = YearMonth.from(month);
-        LocalDate firstDate = targetYearMonth.atDay(1);
-        LocalDate lastDate = targetYearMonth.atEndOfMonth();
+        logger.info("#####################");
+        logger.info(range.toString());
+//        LocalDate month = LocalDate.parse(range, formatter);
+//        YearMonth targetYearMonth = YearMonth.from(month);
+//        LocalDate firstDate = targetYearMonth.atDay(1);
+//        LocalDate lastDate = targetYearMonth.atEndOfMonth();
+        LocalDateTime firstDate = range.atDay(1).atStartOfDay();
+        LocalDateTime lastDate = range.atEndOfMonth().atTime(23,59,59);
+        logger.info(firstDate + ")))" + lastDate);
+
 
         List<StarResponseDto> data = starRepository.findAllByAccountAndCreatedAtBetween(account,
                 firstDate, lastDate).stream().map(s -> StarResponseDto.of(s))

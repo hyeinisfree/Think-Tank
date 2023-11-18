@@ -18,6 +18,7 @@ public enum ResponseCode {
     SIGNIN_SUCCESS(OK, "로그인 성공"),
     SIGNOUT_SUCCESS(OK, "로그아웃 성공"),
     STAR_READ_SUCCESS(OK, "스타 상세 조회 성공"),
+    STAR_MONTHLY_READ_SUCCESS(OK, "스타 월별 조회 성공"),
     STAR_UPDATE_SUCCESS(OK, "스타 수정 성공"),
     STAR_DELETE_SUCCESS(OK, "스타 삭제 성공"),
 
