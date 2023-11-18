@@ -4,6 +4,7 @@ import com.ttteam.thinktank.controller.dto.StarRequestDto;
 import com.ttteam.thinktank.controller.dto.StarResponseDto;
 import com.ttteam.thinktank.entity.Account;
 import com.ttteam.thinktank.entity.Star;
+import com.ttteam.thinktank.exception.ForbiddenException;
 import com.ttteam.thinktank.exception.ResourceNotFoundException;
 import com.ttteam.thinktank.repository.AccountRepository;
 import com.ttteam.thinktank.repository.StarRepository;
@@ -21,8 +22,8 @@ public class StarService {
     private final AccountRepository accountRepository;
     private final StarRepository starRepository;
 
-    public StarResponseDto createStar(Long accountId, StarRequestDto request) {
-        Account account = accountRepository.findById(accountId)
+    public StarResponseDto createStar(String uuid, StarRequestDto request) {
+        Account account = accountRepository.findByUuid(uuid)
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
 
         LocalDateTime now = LocalDateTime.now();
@@ -46,4 +47,19 @@ public class StarService {
             .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
         return StarResponseDto.of(star);
     }
+
+    public void updateStar(String uuid, Long starId, StarRequestDto request) {
+        Account account = accountRepository.findByUuid(uuid)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
+
+        Star star = starRepository.findById(starId)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
+
+        if(!account.equals(star.getAccount())){
+            throw new ForbiddenException(ResponseCode.STAR_UPDATE_FAIL_NOT_OWNER);
+        }
+
+        star.update(request.getTitle(), request.getContent());
+    }
+
 }
