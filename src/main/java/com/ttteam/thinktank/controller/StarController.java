@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,16 @@ public class StarController {
     private final StarService starService;
 
     @PostMapping("")
-    public ResponseEntity<ResponseData<StarResponseDto>> create(
+    public ResponseEntity<ResponseData<StarResponseDto>> createStar(
         @PathVariable @NotNull Long uuid, @Valid StarRequestDto request) {
         StarResponseDto data = starService.createStar(uuid, request);
         return ResponseData.toResponseEntity(ResponseCode.STAR_CREATE_SUCCESS, data);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseData<StarResponseDto>> readStar(
+        @PathVariable @NotNull Long starId) {
+        StarResponseDto data = starService.readStar(starId);
+        return ResponseData.toResponseEntity(ResponseCode.STAR_READ_SUCCESS, data);
     }
 }

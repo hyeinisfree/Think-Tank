@@ -40,4 +40,10 @@ public class StarService {
 
         return StarResponseDto.of(star);
     }
+
+    public StarResponseDto readStar(Long starId) {
+        Star star = starRepository.findById(starId)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
+        return StarResponseDto.of(star);
+    }
 }
