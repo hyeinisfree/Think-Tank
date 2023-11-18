@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.FetchProfiles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,8 @@ public class StarController {
 
     @PatchMapping("")
     public ResponseEntity<ResponseData> updateStar(
-        @PathVariable @NotNull String uuid, @PathVariable @NotNull Long starId, @Valid StarRequestDto request) {
+        @PathVariable @NotNull String uuid, @PathVariable @NotNull Long starId,
+        @Valid StarRequestDto request) {
         starService.updateStar(uuid, starId, request);
         return ResponseData.toResponseEntity(ResponseCode.STAR_UPDATE_SUCCESS);
     }
@@ -45,5 +47,12 @@ public class StarController {
         @PathVariable @NotNull String uuid, @PathVariable @NotNull Long starId) {
         StarResponseDto data = starService.readStar(starId);
         return ResponseData.toResponseEntity(ResponseCode.STAR_READ_SUCCESS, data);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<ResponseData> deleteStar(@PathVariable @NotNull String uuid,
+        @PathVariable @NotNull Long starId) {
+        starService.deleteStar(uuid, starId);
+        return ResponseData.toResponseEntity(ResponseCode.STAR_DELETE_SUCCESS);
     }
 }

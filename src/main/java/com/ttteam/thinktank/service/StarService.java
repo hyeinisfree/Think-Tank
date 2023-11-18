@@ -62,4 +62,18 @@ public class StarService {
         star.update(request.getTitle(), request.getContent());
     }
 
+    public void deleteStar(String uuid, Long starId) {
+        Account account = accountRepository.findByUuid(uuid)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.ACCOUNT_NOT_FOUND));
+
+        Star star = starRepository.findById(starId)
+            .orElseThrow(() -> new ResourceNotFoundException(ResponseCode.STAR_NOT_FOUND));
+
+        if(!account.equals(star.getAccount())){
+            throw new ForbiddenException(ResponseCode.STAR_DELETE_FAIL_NOT_OWNER);
+        }
+
+        starRepository.delete(star);
+    }
+
 }
