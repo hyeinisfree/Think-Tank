@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ public class StarController {
 
     @PostMapping("")
     public ResponseEntity<ResponseData<StarResponseDto>> createStar(
-        @RequestParam @NotNull String uuid, @Valid StarRequestDto request) {
+        @RequestParam @NotNull String uuid, @Valid @RequestBody StarRequestDto request) {
         StarResponseDto data = starService.createStar(uuid, request);
         return ResponseData.toResponseEntity(ResponseCode.STAR_CREATE_SUCCESS, data);
     }
@@ -40,7 +41,7 @@ public class StarController {
     @PatchMapping("{starId}")
     public ResponseEntity<ResponseData> updateStar(
         @RequestParam @NotNull String uuid, @PathVariable @NotNull Long starId,
-        @Valid StarRequestDto request) {
+        @Valid @RequestBody StarRequestDto request) {
         starService.updateStar(uuid, starId, request);
         return ResponseData.toResponseEntity(ResponseCode.STAR_UPDATE_SUCCESS);
     }
